@@ -14,7 +14,7 @@ SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
-  const { user, isLoading } = useAuth();
+  const { user, wedding, isLoading } = useAuth();
   const [appIsReady, setAppIsReady] = useState(false);
 
   useEffect(() => {
@@ -41,15 +41,11 @@ function RootLayoutNav() {
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Stack>
         {!user ? (
-          <Stack.Screen 
-            name="(auth)" 
-            options={{ headerShown: false }} 
-          />
+          <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+        ) : !wedding ? (
+          <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         ) : (
-          <Stack.Screen 
-            name="(tabs)" 
-            options={{ headerShown: false }} 
-          />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         )}
         <Stack.Screen name="+not-found" />
       </Stack>
