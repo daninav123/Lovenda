@@ -92,9 +92,13 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       
       await AsyncStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
-      
-      // Redirigir al dashboard principal
-      router.replace('/(tabs)');
+
+      const weddingData = await AsyncStorage.getItem('wedding');
+      if (weddingData) {
+        router.replace('/(tabs)');
+      } else {
+        router.replace('/onboarding');
+      }
     } catch (error) {
       console.error('Login error:', error);
     } finally {
@@ -116,8 +120,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       await AsyncStorage.setItem('user', JSON.stringify(newUser));
       setUser(newUser);
       
-      // Redirigir al onboarding o dashboard
-      router.replace('/(tabs)');
+      const weddingData = await AsyncStorage.getItem('wedding');
+      if (weddingData) {
+        router.replace('/(tabs)');
+      } else {
+        router.replace('/onboarding');
+      }
     } catch (error) {
       console.error('Registration error:', error);
       throw new Error('Error al registrar el usuario');
@@ -158,10 +166,8 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
   
   const updateWedding = async (weddingData: Partial<Wedding>) => {
-    if (!wedding) return;
-    
     try {
-      const updatedWedding = { ...wedding, ...weddingData };
+      const updatedWedding = { ...(wedding ?? {}), ...weddingData } as Wedding;
       await AsyncStorage.setItem('wedding', JSON.stringify(updatedWedding));
       setWedding(updatedWedding);
     } catch (error) {
