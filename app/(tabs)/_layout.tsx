@@ -1,45 +1,89 @@
 import { Tabs } from 'expo-router';
 import React from 'react';
-import { Platform } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
 import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
+  const isDark = colorScheme === 'dark';
+  const tabBarBg = isDark ? Colors.dark.card : Colors.light.card;
+  const tabBarActiveTint = isDark ? '#B388FF' : '#7E57C2';
+  const tabBarInactiveTint = isDark ? '#B0BEC5' : '#78909C';
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: tabBarActiveTint,
+        tabBarInactiveTintColor: tabBarInactiveTint,
         headerShown: false,
-        tabBarButton: HapticTab,
-        tabBarBackground: TabBarBackground,
-        tabBarStyle: Platform.select({
-          ios: {
-            // Use a transparent background on iOS to show the blur effect
-            position: 'absolute',
+        tabBarStyle: [
+          styles.tabBar,
+          {
+            backgroundColor: tabBarBg,
+            borderTopLeftRadius: 20,
+            borderTopRightRadius: 20,
+            ...styles.shadow,
           },
-          default: {},
-        }),
+        ],
+        tabBarLabelStyle: {
+          fontSize: 14,
+          fontWeight: '600',
+          paddingBottom: 8,
+        },
       }}>
       <Tabs.Screen
-        name="index"
+        name="inicio"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Inicio',
         }}
       />
+      
       <Tabs.Screen
-        name="explore"
+        name="tareas"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Tareas',
+        }}
+      />
+      
+      <Tabs.Screen
+        name="finanzas"
+        options={{
+          title: 'Finanzas',
+        }}
+      />
+      
+      <Tabs.Screen
+        name="mas"
+        options={{
+          title: 'Más',
         }}
       />
     </Tabs>
   );
 }
+
+const styles = StyleSheet.create({
+  tabBar: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: 60,
+    borderTopWidth: 0,
+    elevation: 5,
+  },
+  shadow: {
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: -4,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+  },
+  tabIconActive: {
+    backgroundColor: 'rgba(126, 87, 194, 0.1)',
+  },
+});
